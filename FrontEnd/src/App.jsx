@@ -8,6 +8,7 @@ import TopBar from "./components/TopBar";
 import UserDetail from "./components/UserDetail";
 import UserList from "./components/UserList";
 import UserPhotos from "./components/UserPhotos";
+import UserComments from "./components/UserComments";
 
 const App = () => {
   const advancedFeaturesEnabled = true;
@@ -37,6 +38,7 @@ const App = () => {
                   element={<Typography variant="h6">Chọn một người dùng từ danh sách bên trái.</Typography>}
                 />
                 <Route path="/users/:userId" element={<UserDetail />} />
+                <Route path="/users/:userId/comments" element={<UserComments />} />
                 <Route
                   path="/photos/:userId"
                   element={<UserPhotos advancedFeaturesEnabled={advancedFeaturesEnabled} />}

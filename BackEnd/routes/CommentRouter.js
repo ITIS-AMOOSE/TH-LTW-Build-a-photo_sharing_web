@@ -1,8 +1,12 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const Photo = require("../db/photoModel");
+const User = require("../db/userModel");
 
 const router = express.Router();
+const invalidUserIdMessage = () => ({
+  message: "ID không hợp lệ hoặc không phải User.",
+});
 
 router.post("/", async (request, response) => {
   try {
@@ -55,6 +59,46 @@ router.get("/", async (request, response) => {
   response.status(200).json({
     message: "Comment API: POST /api/comment với body { photo_id, user_id, comment }.",
   });
+});
+
+router.get("/:id", async (request, response) => {
+  try {
+    const { id } = request.params;
+
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return response.status(400).json(invalidUserIdMessage());
+    }
+
+    const user = await User.findById(id).select("_id").lean();
+    if (!user) {
+      return response.status(400).json(invalidUserIdMessage());
+    }
+
+    const photos = await Photo.find({ "comments.user_id": id }).lean();
+    const result = [];
+
+    photos.forEach((p) => {
+      (p.comments || []).forEach((c) => {
+        if (String(c.user_id) === String(id)) {
+          result.push({
+            _id: c._id,
+            comment: c.comment,
+            date_time: c.date_time,
+            photo: {
+              _id: p._id,
+              file_name: p.file_name,
+              user_id: p.user_id,
+            },
+          });
+        }
+      });
+    });
+
+    result.sort((a, b) => new Date(b.date_time) - new Date(a.date_time));
+    return response.status(200).json(result);
+  } catch (error) {
+    return response.status(500).json({ message: error.message });
+  }
 });
 
 module.exports = router;

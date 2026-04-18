@@ -18,6 +18,7 @@ app.use(express.json());
 app.use("/user", UserRouter);
 app.use("/photosOfUser", PhotoRouter);
 app.use("/api/comment", CommentRouter);
+app.use("/commentsOfUser", CommentRouter);
 
 app.get("/", (req, res) => {
   res.status(200).json({ message: "Hello from photo-sharing app API!" });
