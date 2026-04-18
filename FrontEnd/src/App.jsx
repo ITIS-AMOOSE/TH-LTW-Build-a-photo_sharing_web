@@ -1,7 +1,7 @@
 import "./App.css";
 
 import React from "react";
-import { Grid, Paper } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 import TopBar from "./components/TopBar";
@@ -32,7 +32,10 @@ const App = () => {
             <Paper className="main-grid-item">
               <Routes>
                 <Route path="/" element={<Navigate to="/users" replace />} />
-                <Route path="/users" element={<UserList />} />
+                <Route
+                  path="/users"
+                  element={<Typography variant="h6">Chọn một người dùng từ danh sách bên trái.</Typography>}
+                />
                 <Route path="/users/:userId" element={<UserDetail />} />
                 <Route
                   path="/photos/:userId"
